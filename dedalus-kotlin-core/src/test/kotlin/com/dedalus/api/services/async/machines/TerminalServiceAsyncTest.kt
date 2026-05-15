@@ -1,0 +1,97 @@
+// File generated from our OpenAPI spec by Stainless.
+
+package com.dedalus.api.services.async.machines
+
+import com.dedalus.api.TestServerExtension
+import com.dedalus.api.client.okhttp.DedalusOkHttpClientAsync
+import com.dedalus.api.core.JsonValue
+import com.dedalus.api.models.machines.terminals.TerminalCreateParams
+import com.dedalus.api.models.machines.terminals.TerminalDeleteParams
+import com.dedalus.api.models.machines.terminals.TerminalListParams
+import com.dedalus.api.models.machines.terminals.TerminalRetrieveParams
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
+
+@ExtendWith(TestServerExtension::class)
+internal class TerminalServiceAsyncTest {
+
+    @Test
+    suspend fun create() {
+        val client =
+            DedalusOkHttpClientAsync.builder()
+                .baseUrl(TestServerExtension.BASE_URL)
+                .apiKey("My API Key")
+                .build()
+        val terminalServiceAsync = client.machines().terminals()
+
+        val terminal =
+            terminalServiceAsync.create(
+                TerminalCreateParams.builder()
+                    .machineId("dm-3")
+                    .terminalCreateParams(
+                        TerminalCreateParams.builder()
+                            .height(0L)
+                            .width(0L)
+                            .cwd("cwd")
+                            .env(
+                                TerminalCreateParams.Env.builder()
+                                    .putAdditionalProperty("foo", JsonValue.from("string"))
+                                    .build()
+                            )
+                            .shell("shell")
+                            .build()
+                    )
+                    .build()
+            )
+
+        terminal.validate()
+    }
+
+    @Test
+    suspend fun retrieve() {
+        val client =
+            DedalusOkHttpClientAsync.builder()
+                .baseUrl(TestServerExtension.BASE_URL)
+                .apiKey("My API Key")
+                .build()
+        val terminalServiceAsync = client.machines().terminals()
+
+        val terminal =
+            terminalServiceAsync.retrieve(
+                TerminalRetrieveParams.builder().machineId("dm-3").terminalId("terminal_id").build()
+            )
+
+        terminal.validate()
+    }
+
+    @Test
+    suspend fun list() {
+        val client =
+            DedalusOkHttpClientAsync.builder()
+                .baseUrl(TestServerExtension.BASE_URL)
+                .apiKey("My API Key")
+                .build()
+        val terminalServiceAsync = client.machines().terminals()
+
+        val page = terminalServiceAsync.list(TerminalListParams.builder().machineId("dm-3").build())
+
+        page.response().validate()
+    }
+
+    @Test
+    suspend fun delete() {
+        val client =
+            DedalusOkHttpClientAsync.builder()
+                .baseUrl(TestServerExtension.BASE_URL)
+                .apiKey("My API Key")
+                .build()
+        val terminalServiceAsync = client.machines().terminals()
+
+        val terminal =
+            terminalServiceAsync.delete(
+                TerminalDeleteParams.builder().machineId("dm-3").terminalId("terminal_id").build()
+            )
+
+        terminal.validate()
+    }
+}
