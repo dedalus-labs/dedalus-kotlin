@@ -3,7 +3,7 @@
 <!-- x-release-please-start-version -->
 
 [![Maven Central](https://img.shields.io/maven-central/v/com.dedalus.api/dedalus-kotlin)](https://central.sonatype.com/artifact/com.dedalus.api/dedalus-kotlin/0.0.1)
-[![javadoc](https://javadoc.io/badge2/com.dedalus.api/dedalus-kotlin/0.0.1/javadoc.svg)](https://javadoc.io/doc/com.dedalus.api/dedalus-kotlin/0.0.1)
+[![javadoc](https://javadoc.io/badge2/com.dedalus.api/dedalus-kotlin/javadoc.svg)](https://javadoc.io/doc/com.dedalus.api/dedalus-kotlin/0.0.1)
 
 <!-- x-release-please-end -->
 
