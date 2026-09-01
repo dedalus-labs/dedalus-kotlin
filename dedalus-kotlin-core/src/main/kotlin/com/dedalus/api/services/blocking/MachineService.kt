@@ -5,7 +5,6 @@ package com.dedalus.api.services.blocking
 import com.dedalus.api.core.ClientOptions
 import com.dedalus.api.core.RequestOptions
 import com.dedalus.api.core.http.HttpResponseFor
-import com.dedalus.api.core.http.StreamResponse
 import com.dedalus.api.models.machines.CreateParams
 import com.dedalus.api.models.machines.Machine
 import com.dedalus.api.models.machines.MachineCreateParams
@@ -13,15 +12,12 @@ import com.dedalus.api.models.machines.MachineDeleteParams
 import com.dedalus.api.models.machines.MachineListPage
 import com.dedalus.api.models.machines.MachineListParams
 import com.dedalus.api.models.machines.MachineRetrieveParams
+import com.dedalus.api.models.machines.MachineRetrieveResponse
 import com.dedalus.api.models.machines.MachineSleepParams
 import com.dedalus.api.models.machines.MachineUpdateParams
 import com.dedalus.api.models.machines.MachineWakeParams
-import com.dedalus.api.models.machines.MachineWatchParams
-import com.dedalus.api.services.blocking.machines.ArtifactService
 import com.dedalus.api.services.blocking.machines.ExecutionService
-import com.dedalus.api.services.blocking.machines.PreviewService
 import com.dedalus.api.services.blocking.machines.SshService
-import com.dedalus.api.services.blocking.machines.TerminalService
 import com.google.errorprone.annotations.MustBeClosed
 
 interface MachineService {
@@ -38,15 +34,9 @@ interface MachineService {
      */
     fun withOptions(modifier: (ClientOptions.Builder) -> Unit): MachineService
 
-    fun artifacts(): ArtifactService
-
-    fun previews(): PreviewService
-
     fun ssh(): SshService
 
     fun executions(): ExecutionService
-
-    fun terminals(): TerminalService
 
     /** Create machine */
     fun create(
@@ -65,7 +55,7 @@ interface MachineService {
     fun retrieve(
         params: MachineRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): Machine
+    ): MachineRetrieveResponse
 
     /** Update machine */
     fun update(
@@ -101,17 +91,6 @@ interface MachineService {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): Machine
 
-    /**
-     * Streams machine lifecycle updates over Server-Sent Events. Each `status` event contains a
-     * full `LifecycleResponse` payload. The stream closes after the machine reaches its current
-     * desired state.
-     */
-    @MustBeClosed
-    fun watchStreaming(
-        params: MachineWatchParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): StreamResponse<Machine>
-
     /** A view of [MachineService] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
 
@@ -122,15 +101,9 @@ interface MachineService {
          */
         fun withOptions(modifier: (ClientOptions.Builder) -> Unit): MachineService.WithRawResponse
 
-        fun artifacts(): ArtifactService.WithRawResponse
-
-        fun previews(): PreviewService.WithRawResponse
-
         fun ssh(): SshService.WithRawResponse
 
         fun executions(): ExecutionService.WithRawResponse
-
-        fun terminals(): TerminalService.WithRawResponse
 
         /**
          * Returns a raw HTTP response for `post /v1/machines`, but is otherwise the same as
@@ -158,7 +131,7 @@ interface MachineService {
         fun retrieve(
             params: MachineRetrieveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<Machine>
+        ): HttpResponseFor<MachineRetrieveResponse>
 
         /**
          * Returns a raw HTTP response for `patch /v1/machines/{machine_id}`, but is otherwise the
@@ -214,15 +187,5 @@ interface MachineService {
             params: MachineWakeParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<Machine>
-
-        /**
-         * Returns a raw HTTP response for `get /v1/machines/{machine_id}/status/stream`, but is
-         * otherwise the same as [MachineService.watchStreaming].
-         */
-        @MustBeClosed
-        fun watchStreaming(
-            params: MachineWatchParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<StreamResponse<Machine>>
     }
 }

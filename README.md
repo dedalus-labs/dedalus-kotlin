@@ -1,7 +1,11 @@
 # Dedalus Kotlin API Library
 
-[![Maven Central](https://img.shields.io/maven-central/v/com.dedalus.api/dedalus-kotlin)](https://central.sonatype.com/artifact/com.dedalus.api/dedalus-kotlin/0.0.1)
-[![javadoc](https://javadoc.io/badge2/com.dedalus.api/dedalus-kotlin/0.0.1/javadoc.svg)](https://javadoc.io/doc/com.dedalus.api/dedalus-kotlin/0.0.1)
+<!-- x-release-please-start-version -->
+
+[![Maven Central](https://img.shields.io/maven-central/v/com.dedalus.api/dedalus-kotlin)](https://central.sonatype.com/artifact/com.dedalus.api/dedalus-kotlin/0.1.0)
+[![javadoc](https://javadoc.io/badge2/com.dedalus.api/dedalus-kotlin/javadoc.svg)](https://javadoc.io/doc/com.dedalus.api/dedalus-kotlin/0.1.0)
+
+<!-- x-release-please-end -->
 
 The Dedalus Kotlin SDK provides convenient access to the [Dedalus REST API](https://docs.dedaluslabs.ai) from applications written in Kotlin.
 
@@ -16,14 +20,20 @@ Use the Dedalus MCP Server to enable AI assistants to interact with this API, al
 
 > Note: You may need to set environment variables in your MCP client.
 
-The REST API documentation can be found on [docs.dedaluslabs.ai](https://docs.dedaluslabs.ai). KDocs are available on [javadoc.io](https://javadoc.io/doc/com.dedalus.api/dedalus-kotlin/0.0.1).
+<!-- x-release-please-start-version -->
+
+The REST API documentation can be found on [docs.dedaluslabs.ai](https://docs.dedaluslabs.ai). KDocs are available on [javadoc.io](https://javadoc.io/doc/com.dedalus.api/dedalus-kotlin/0.1.0).
+
+<!-- x-release-please-end -->
 
 ## Installation
+
+<!-- x-release-please-start-version -->
 
 ### Gradle
 
 ```kotlin
-implementation("com.dedalus.api:dedalus-kotlin:0.0.1")
+implementation("com.dedalus.api:dedalus-kotlin:0.1.0")
 ```
 
 ### Maven
@@ -32,9 +42,11 @@ implementation("com.dedalus.api:dedalus-kotlin:0.0.1")
 <dependency>
   <groupId>com.dedalus.api</groupId>
   <artifactId>dedalus-kotlin</artifactId>
-  <version>0.0.1</version>
+  <version>0.1.0</version>
 </dependency>
 ```
+
+<!-- x-release-please-end -->
 
 ## Requirements
 
@@ -52,11 +64,7 @@ import com.dedalus.api.models.machines.Machine
 // Or configures using the `DEDALUS_API_KEY`, `DEDALUS_X_API_KEY`, `DEDALUS_ORG_ID` and `DEDALUS_BASE_URL` environment variables
 val client: DedalusClient = DedalusOkHttpClient.fromEnv()
 
-val params: CreateParams = CreateParams.builder()
-    .memoryMiB(0L)
-    .storageGiB(0L)
-    .vcpu(0.0)
-    .build()
+val params: CreateParams = CreateParams.builder().build()
 val machine: Machine = client.machines().create(params)
 ```
 
@@ -156,11 +164,7 @@ import com.dedalus.api.models.machines.Machine
 // Or configures using the `DEDALUS_API_KEY`, `DEDALUS_X_API_KEY`, `DEDALUS_ORG_ID` and `DEDALUS_BASE_URL` environment variables
 val client: DedalusClient = DedalusOkHttpClient.fromEnv()
 
-val params: CreateParams = CreateParams.builder()
-    .memoryMiB(0L)
-    .storageGiB(0L)
-    .vcpu(0.0)
-    .build()
+val params: CreateParams = CreateParams.builder().build()
 val machine: Machine = client.async().machines().create(params)
 ```
 
@@ -176,30 +180,11 @@ import com.dedalus.api.models.machines.Machine
 // Or configures using the `DEDALUS_API_KEY`, `DEDALUS_X_API_KEY`, `DEDALUS_ORG_ID` and `DEDALUS_BASE_URL` environment variables
 val client: DedalusClientAsync = DedalusOkHttpClientAsync.fromEnv()
 
-val params: CreateParams = CreateParams.builder()
-    .memoryMiB(0L)
-    .storageGiB(0L)
-    .vcpu(0.0)
-    .build()
+val params: CreateParams = CreateParams.builder().build()
 val machine: Machine = client.machines().create(params)
 ```
 
 The asynchronous client supports the same options as the synchronous one, except most methods are [suspending](https://kotlinlang.org/docs/coroutines-guide.html).
-
-## Streaming
-
-The SDK defines methods that return response "chunk" streams, where each chunk can be individually processed as soon as it arrives instead of waiting on the full response. Streaming methods generally correspond to [SSE](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events) or [JSONL](https://jsonlines.org) responses.
-
-Some of these methods may have streaming and non-streaming variants, but a streaming method will always have a `Streaming` suffix in its name, even if it doesn't have a non-streaming variant.
-
-These streaming methods return [`StreamResponse`](dedalus-kotlin-core/src/main/kotlin/com/dedalus/api/core/http/StreamResponse.kt) for synchronous clients:
-
-```kotlin
-client.machines().watchStreaming(params).use { response ->
-    response.asSequence().forEach { println(it) }
-    println("No more chunks!")
-}
-```
 
 ## Raw responses
 
@@ -213,11 +198,7 @@ import com.dedalus.api.core.http.HttpResponseFor
 import com.dedalus.api.models.machines.CreateParams
 import com.dedalus.api.models.machines.Machine
 
-val params: CreateParams = CreateParams.builder()
-    .memoryMiB(0L)
-    .storageGiB(0L)
-    .vcpu(0.0)
-    .build()
+val params: CreateParams = CreateParams.builder().build()
 val machine: HttpResponseFor<Machine> = client.machines().withRawResponse().create(params)
 
 val statusCode: Int = machine.statusCode()
@@ -248,8 +229,6 @@ The SDK throws custom unchecked exception types:
   | 429    | [`RateLimitException`](dedalus-kotlin-core/src/main/kotlin/com/dedalus/api/errors/RateLimitException.kt)                       |
   | 5xx    | [`InternalServerException`](dedalus-kotlin-core/src/main/kotlin/com/dedalus/api/errors/InternalServerException.kt)             |
   | others | [`UnexpectedStatusCodeException`](dedalus-kotlin-core/src/main/kotlin/com/dedalus/api/errors/UnexpectedStatusCodeException.kt) |
-
-  [`SseException`](dedalus-kotlin-core/src/main/kotlin/com/dedalus/api/errors/SseException.kt) is thrown for errors encountered during [SSE streaming](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events) after a successful initial HTTP response.
 
 - [`DedalusIoException`](dedalus-kotlin-core/src/main/kotlin/com/dedalus/api/errors/DedalusIoException.kt): I/O networking errors.
 
@@ -552,11 +531,7 @@ import com.dedalus.api.models.machines.CreateParams
 import com.dedalus.api.models.machines.MachineCreateParams
 
 val params: MachineCreateParams = MachineCreateParams.builder()
-    .createParams(CreateParams.builder()
-        .memoryMiB(0L)
-        .storageGiB(0L)
-        .vcpu(0.0)
-        .build())
+    .createParams(CreateParams.builder().build())
     .build()
 ```
 
@@ -601,16 +576,11 @@ To forcibly omit a required parameter or property, pass [`JsonMissing`](dedalus-
 
 ```kotlin
 import com.dedalus.api.core.JsonMissing
-import com.dedalus.api.models.machines.CreateParams
 import com.dedalus.api.models.machines.MachineCreateParams
+import com.dedalus.api.models.machines.MachineRetrieveParams
 
-val params: MachineCreateParams = MachineCreateParams.builder()
-    .createParams(CreateParams.builder()
-        .memoryMiB(0L)
-        .storageGiB(0L)
-        .vcpu(0.0)
-        .build())
-    .memoryMiB(JsonMissing.of())
+val params: MachineCreateParams = MachineRetrieveParams.builder()
+    .machineId(JsonMissing.of())
     .build()
 ```
 
@@ -733,4 +703,4 @@ This package generally follows [SemVer](https://semver.org/spec/v2.0.0.html) con
 
 We take backwards-compatibility seriously and work hard to ensure you can rely on a smooth upgrade experience.
 
-We are keen for your feedback; please open an [issue](https://www.github.com/stainless-sdks/dedalus-kotlin/issues) with questions, bugs, or suggestions.
+We are keen for your feedback; please open an [issue](https://www.github.com/dedalus-labs/dedalus-kotlin/issues) with questions, bugs, or suggestions.
