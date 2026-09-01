@@ -29,7 +29,7 @@ internal class ExecutionServiceAsyncTest {
         val execution =
             executionServiceAsync.create(
                 ExecutionCreateParams.builder()
-                    .machineId("dm-3")
+                    .machineId("dm-ecc2efdd-ddfa-31a9-c6f1-b833d337aa7c")
                     .executionCreateParams(
                         ExecutionCreateParams.builder()
                             .addCommand("string")
@@ -61,7 +61,7 @@ internal class ExecutionServiceAsyncTest {
         val execution =
             executionServiceAsync.retrieve(
                 ExecutionRetrieveParams.builder()
-                    .machineId("dm-3")
+                    .machineId("dm-ecc2efdd-ddfa-31a9-c6f1-b833d337aa7c")
                     .executionId("execution_id")
                     .build()
             )
@@ -79,7 +79,11 @@ internal class ExecutionServiceAsyncTest {
         val executionServiceAsync = client.machines().executions()
 
         val page =
-            executionServiceAsync.list(ExecutionListParams.builder().machineId("dm-3").build())
+            executionServiceAsync.list(
+                ExecutionListParams.builder()
+                    .machineId("dm-ecc2efdd-ddfa-31a9-c6f1-b833d337aa7c")
+                    .build()
+            )
 
         page.response().validate()
     }
@@ -96,7 +100,7 @@ internal class ExecutionServiceAsyncTest {
         val execution =
             executionServiceAsync.delete(
                 ExecutionDeleteParams.builder()
-                    .machineId("dm-3")
+                    .machineId("dm-ecc2efdd-ddfa-31a9-c6f1-b833d337aa7c")
                     .executionId("execution_id")
                     .build()
             )
@@ -116,7 +120,7 @@ internal class ExecutionServiceAsyncTest {
         val page =
             executionServiceAsync.events(
                 ExecutionEventsParams.builder()
-                    .machineId("dm-3")
+                    .machineId("dm-ecc2efdd-ddfa-31a9-c6f1-b833d337aa7c")
                     .executionId("execution_id")
                     .build()
             )
@@ -136,7 +140,7 @@ internal class ExecutionServiceAsyncTest {
         val executionOutput =
             executionServiceAsync.output(
                 ExecutionOutputParams.builder()
-                    .machineId("dm-3")
+                    .machineId("dm-ecc2efdd-ddfa-31a9-c6f1-b833d337aa7c")
                     .executionId("execution_id")
                     .build()
             )

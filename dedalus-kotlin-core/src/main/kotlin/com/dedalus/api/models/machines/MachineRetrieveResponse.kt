@@ -16,14 +16,14 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Collections
 import java.util.Objects
 
-class Machine
+class MachineRetrieveResponse
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val autosleepSeconds: JsonField<Long>,
     private val desiredState: JsonField<DesiredState>,
     private val machineId: JsonField<String>,
     private val memoryMiB: JsonField<Long>,
-    private val phase: JsonField<Phase>,
+    private val status: JsonField<LifecycleStatus>,
     private val storageGiB: JsonField<Long>,
     private val vcpu: JsonField<Double>,
     private val additionalProperties: MutableMap<String, JsonValue>,
@@ -39,7 +39,9 @@ private constructor(
         desiredState: JsonField<DesiredState> = JsonMissing.of(),
         @JsonProperty("machine_id") @ExcludeMissing machineId: JsonField<String> = JsonMissing.of(),
         @JsonProperty("memory_mib") @ExcludeMissing memoryMiB: JsonField<Long> = JsonMissing.of(),
-        @JsonProperty("phase") @ExcludeMissing phase: JsonField<Phase> = JsonMissing.of(),
+        @JsonProperty("status")
+        @ExcludeMissing
+        status: JsonField<LifecycleStatus> = JsonMissing.of(),
         @JsonProperty("storage_gib") @ExcludeMissing storageGiB: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("vcpu") @ExcludeMissing vcpu: JsonField<Double> = JsonMissing.of(),
     ) : this(
@@ -47,7 +49,7 @@ private constructor(
         desiredState,
         machineId,
         memoryMiB,
-        phase,
+        status,
         storageGiB,
         vcpu,
         mutableMapOf(),
@@ -85,7 +87,7 @@ private constructor(
      * @throws DedalusInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
-    fun phase(): Phase = phase.getRequired("phase")
+    fun status(): LifecycleStatus = status.getRequired("status")
 
     /**
      * @throws DedalusInvalidDataException if the JSON field has an unexpected type or is
@@ -135,11 +137,11 @@ private constructor(
     @JsonProperty("memory_mib") @ExcludeMissing fun _memoryMiB(): JsonField<Long> = memoryMiB
 
     /**
-     * Returns the raw JSON value of [phase].
+     * Returns the raw JSON value of [status].
      *
-     * Unlike [phase], this method doesn't throw if the JSON field has an unexpected type.
+     * Unlike [status], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("phase") @ExcludeMissing fun _phase(): JsonField<Phase> = phase
+    @JsonProperty("status") @ExcludeMissing fun _status(): JsonField<LifecycleStatus> = status
 
     /**
      * Returns the raw JSON value of [storageGiB].
@@ -170,7 +172,7 @@ private constructor(
     companion object {
 
         /**
-         * Returns a mutable builder for constructing an instance of [Machine].
+         * Returns a mutable builder for constructing an instance of [MachineRetrieveResponse].
          *
          * The following fields are required:
          * ```kotlin
@@ -178,7 +180,7 @@ private constructor(
          * .desiredState()
          * .machineId()
          * .memoryMiB()
-         * .phase()
+         * .status()
          * .storageGiB()
          * .vcpu()
          * ```
@@ -186,27 +188,27 @@ private constructor(
         fun builder() = Builder()
     }
 
-    /** A builder for [Machine]. */
+    /** A builder for [MachineRetrieveResponse]. */
     class Builder internal constructor() {
 
         private var autosleepSeconds: JsonField<Long>? = null
         private var desiredState: JsonField<DesiredState>? = null
         private var machineId: JsonField<String>? = null
         private var memoryMiB: JsonField<Long>? = null
-        private var phase: JsonField<Phase>? = null
+        private var status: JsonField<LifecycleStatus>? = null
         private var storageGiB: JsonField<Long>? = null
         private var vcpu: JsonField<Double>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(machine: Machine) = apply {
-            autosleepSeconds = machine.autosleepSeconds
-            desiredState = machine.desiredState
-            machineId = machine.machineId
-            memoryMiB = machine.memoryMiB
-            phase = machine.phase
-            storageGiB = machine.storageGiB
-            vcpu = machine.vcpu
-            additionalProperties = machine.additionalProperties.toMutableMap()
+        internal fun from(machineRetrieveResponse: MachineRetrieveResponse) = apply {
+            autosleepSeconds = machineRetrieveResponse.autosleepSeconds
+            desiredState = machineRetrieveResponse.desiredState
+            machineId = machineRetrieveResponse.machineId
+            memoryMiB = machineRetrieveResponse.memoryMiB
+            status = machineRetrieveResponse.status
+            storageGiB = machineRetrieveResponse.storageGiB
+            vcpu = machineRetrieveResponse.vcpu
+            additionalProperties = machineRetrieveResponse.additionalProperties.toMutableMap()
         }
 
         /** Seconds of inactivity before autosleep. 0 disables autosleep. */
@@ -259,15 +261,16 @@ private constructor(
          */
         fun memoryMiB(memoryMiB: JsonField<Long>) = apply { this.memoryMiB = memoryMiB }
 
-        fun phase(phase: Phase) = phase(JsonField.of(phase))
+        fun status(status: LifecycleStatus) = status(JsonField.of(status))
 
         /**
-         * Sets [Builder.phase] to an arbitrary JSON value.
+         * Sets [Builder.status] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.phase] with a well-typed [Phase] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.status] with a well-typed [LifecycleStatus] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun phase(phase: JsonField<Phase>) = apply { this.phase = phase }
+        fun status(status: JsonField<LifecycleStatus>) = apply { this.status = status }
 
         fun storageGiB(storageGiB: Long) = storageGiB(JsonField.of(storageGiB))
 
@@ -310,7 +313,7 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [Machine].
+         * Returns an immutable instance of [MachineRetrieveResponse].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          *
@@ -320,20 +323,20 @@ private constructor(
          * .desiredState()
          * .machineId()
          * .memoryMiB()
-         * .phase()
+         * .status()
          * .storageGiB()
          * .vcpu()
          * ```
          *
          * @throws IllegalStateException if any required field is unset.
          */
-        fun build(): Machine =
-            Machine(
+        fun build(): MachineRetrieveResponse =
+            MachineRetrieveResponse(
                 checkRequired("autosleepSeconds", autosleepSeconds),
                 checkRequired("desiredState", desiredState),
                 checkRequired("machineId", machineId),
                 checkRequired("memoryMiB", memoryMiB),
-                checkRequired("phase", phase),
+                checkRequired("status", status),
                 checkRequired("storageGiB", storageGiB),
                 checkRequired("vcpu", vcpu),
                 additionalProperties.toMutableMap(),
@@ -350,7 +353,7 @@ private constructor(
      * @throws DedalusInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): Machine = apply {
+    fun validate(): MachineRetrieveResponse = apply {
         if (validated) {
             return@apply
         }
@@ -359,7 +362,7 @@ private constructor(
         desiredState().validate()
         machineId()
         memoryMiB()
-        phase().validate()
+        status().validate()
         storageGiB()
         vcpu()
         validated = true
@@ -383,7 +386,7 @@ private constructor(
             (desiredState.asKnown()?.validity() ?: 0) +
             (if (machineId.asKnown() == null) 0 else 1) +
             (if (memoryMiB.asKnown() == null) 0 else 1) +
-            (phase.asKnown()?.validity() ?: 0) +
+            (status.asKnown()?.validity() ?: 0) +
             (if (storageGiB.asKnown() == null) 0 else 1) +
             (if (vcpu.asKnown() == null) 0 else 1)
 
@@ -530,193 +533,17 @@ private constructor(
         override fun toString() = value.toString()
     }
 
-    class Phase @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
-
-        /**
-         * Returns this class instance's raw value.
-         *
-         * This is usually only useful if this instance was deserialized from data that doesn't
-         * match any known member, and you want to know that value. For example, if the SDK is on an
-         * older version than the API, then the API may respond with new members that the SDK is
-         * unaware of.
-         */
-        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
-
-        companion object {
-
-            val ACCEPTED = of("accepted")
-
-            val PLACEMENT_PENDING = of("placement_pending")
-
-            val STARTING = of("starting")
-
-            val RUNNING = of("running")
-
-            val STOPPING = of("stopping")
-
-            val SLEEPING = of("sleeping")
-
-            val DESTROYING = of("destroying")
-
-            val DESTROYED = of("destroyed")
-
-            val FAILED = of("failed")
-
-            fun of(value: String) = Phase(JsonField.of(value))
-        }
-
-        /** An enum containing [Phase]'s known values. */
-        enum class Known {
-            ACCEPTED,
-            PLACEMENT_PENDING,
-            STARTING,
-            RUNNING,
-            STOPPING,
-            SLEEPING,
-            DESTROYING,
-            DESTROYED,
-            FAILED,
-        }
-
-        /**
-         * An enum containing [Phase]'s known values, as well as an [_UNKNOWN] member.
-         *
-         * An instance of [Phase] can contain an unknown value in a couple of cases:
-         * - It was deserialized from data that doesn't match any known member. For example, if the
-         *   SDK is on an older version than the API, then the API may respond with new members that
-         *   the SDK is unaware of.
-         * - It was constructed with an arbitrary value using the [of] method.
-         */
-        enum class Value {
-            ACCEPTED,
-            PLACEMENT_PENDING,
-            STARTING,
-            RUNNING,
-            STOPPING,
-            SLEEPING,
-            DESTROYING,
-            DESTROYED,
-            FAILED,
-            /** An enum member indicating that [Phase] was instantiated with an unknown value. */
-            _UNKNOWN,
-        }
-
-        /**
-         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
-         * if the class was instantiated with an unknown value.
-         *
-         * Use the [known] method instead if you're certain the value is always known or if you want
-         * to throw for the unknown case.
-         */
-        fun value(): Value =
-            when (this) {
-                ACCEPTED -> Value.ACCEPTED
-                PLACEMENT_PENDING -> Value.PLACEMENT_PENDING
-                STARTING -> Value.STARTING
-                RUNNING -> Value.RUNNING
-                STOPPING -> Value.STOPPING
-                SLEEPING -> Value.SLEEPING
-                DESTROYING -> Value.DESTROYING
-                DESTROYED -> Value.DESTROYED
-                FAILED -> Value.FAILED
-                else -> Value._UNKNOWN
-            }
-
-        /**
-         * Returns an enum member corresponding to this class instance's value.
-         *
-         * Use the [value] method instead if you're uncertain the value is always known and don't
-         * want to throw for the unknown case.
-         *
-         * @throws DedalusInvalidDataException if this class instance's value is a not a known
-         *   member.
-         */
-        fun known(): Known =
-            when (this) {
-                ACCEPTED -> Known.ACCEPTED
-                PLACEMENT_PENDING -> Known.PLACEMENT_PENDING
-                STARTING -> Known.STARTING
-                RUNNING -> Known.RUNNING
-                STOPPING -> Known.STOPPING
-                SLEEPING -> Known.SLEEPING
-                DESTROYING -> Known.DESTROYING
-                DESTROYED -> Known.DESTROYED
-                FAILED -> Known.FAILED
-                else -> throw DedalusInvalidDataException("Unknown Phase: $value")
-            }
-
-        /**
-         * Returns this class instance's primitive wire representation.
-         *
-         * This differs from the [toString] method because that method is primarily for debugging
-         * and generally doesn't throw.
-         *
-         * @throws DedalusInvalidDataException if this class instance's value does not have the
-         *   expected primitive type.
-         */
-        fun asString(): String =
-            _value().asString() ?: throw DedalusInvalidDataException("Value is not a String")
-
-        private var validated: Boolean = false
-
-        /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
-         *
-         * This method is _not_ forwards compatible with new types from the API for existing fields.
-         *
-         * @throws DedalusInvalidDataException if any value type in this object doesn't match its
-         *   expected type.
-         */
-        fun validate(): Phase = apply {
-            if (validated) {
-                return@apply
-            }
-
-            known()
-            validated = true
-        }
-
-        fun isValid(): Boolean =
-            try {
-                validate()
-                true
-            } catch (e: DedalusInvalidDataException) {
-                false
-            }
-
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
-        internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
-
-            return other is Phase && value == other.value
-        }
-
-        override fun hashCode() = value.hashCode()
-
-        override fun toString() = value.toString()
-    }
-
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true
         }
 
-        return other is Machine &&
+        return other is MachineRetrieveResponse &&
             autosleepSeconds == other.autosleepSeconds &&
             desiredState == other.desiredState &&
             machineId == other.machineId &&
             memoryMiB == other.memoryMiB &&
-            phase == other.phase &&
+            status == other.status &&
             storageGiB == other.storageGiB &&
             vcpu == other.vcpu &&
             additionalProperties == other.additionalProperties
@@ -728,7 +555,7 @@ private constructor(
             desiredState,
             machineId,
             memoryMiB,
-            phase,
+            status,
             storageGiB,
             vcpu,
             additionalProperties,
@@ -738,5 +565,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "Machine{autosleepSeconds=$autosleepSeconds, desiredState=$desiredState, machineId=$machineId, memoryMiB=$memoryMiB, phase=$phase, storageGiB=$storageGiB, vcpu=$vcpu, additionalProperties=$additionalProperties}"
+        "MachineRetrieveResponse{autosleepSeconds=$autosleepSeconds, desiredState=$desiredState, machineId=$machineId, memoryMiB=$memoryMiB, status=$status, storageGiB=$storageGiB, vcpu=$vcpu, additionalProperties=$additionalProperties}"
 }

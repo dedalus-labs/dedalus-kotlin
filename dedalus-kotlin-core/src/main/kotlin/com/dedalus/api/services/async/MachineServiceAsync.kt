@@ -12,14 +12,12 @@ import com.dedalus.api.models.machines.MachineDeleteParams
 import com.dedalus.api.models.machines.MachineListPageAsync
 import com.dedalus.api.models.machines.MachineListParams
 import com.dedalus.api.models.machines.MachineRetrieveParams
+import com.dedalus.api.models.machines.MachineRetrieveResponse
 import com.dedalus.api.models.machines.MachineSleepParams
 import com.dedalus.api.models.machines.MachineUpdateParams
 import com.dedalus.api.models.machines.MachineWakeParams
-import com.dedalus.api.services.async.machines.ArtifactServiceAsync
 import com.dedalus.api.services.async.machines.ExecutionServiceAsync
-import com.dedalus.api.services.async.machines.PreviewServiceAsync
 import com.dedalus.api.services.async.machines.SshServiceAsync
-import com.dedalus.api.services.async.machines.TerminalServiceAsync
 import com.google.errorprone.annotations.MustBeClosed
 
 interface MachineServiceAsync {
@@ -36,15 +34,9 @@ interface MachineServiceAsync {
      */
     fun withOptions(modifier: (ClientOptions.Builder) -> Unit): MachineServiceAsync
 
-    fun artifacts(): ArtifactServiceAsync
-
-    fun previews(): PreviewServiceAsync
-
     fun ssh(): SshServiceAsync
 
     fun executions(): ExecutionServiceAsync
-
-    fun terminals(): TerminalServiceAsync
 
     /** Create machine */
     suspend fun create(
@@ -63,7 +55,7 @@ interface MachineServiceAsync {
     suspend fun retrieve(
         params: MachineRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): Machine
+    ): MachineRetrieveResponse
 
     /** Update machine */
     suspend fun update(
@@ -113,15 +105,9 @@ interface MachineServiceAsync {
             modifier: (ClientOptions.Builder) -> Unit
         ): MachineServiceAsync.WithRawResponse
 
-        fun artifacts(): ArtifactServiceAsync.WithRawResponse
-
-        fun previews(): PreviewServiceAsync.WithRawResponse
-
         fun ssh(): SshServiceAsync.WithRawResponse
 
         fun executions(): ExecutionServiceAsync.WithRawResponse
-
-        fun terminals(): TerminalServiceAsync.WithRawResponse
 
         /**
          * Returns a raw HTTP response for `post /v1/machines`, but is otherwise the same as
@@ -149,7 +135,7 @@ interface MachineServiceAsync {
         suspend fun retrieve(
             params: MachineRetrieveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<Machine>
+        ): HttpResponseFor<MachineRetrieveResponse>
 
         /**
          * Returns a raw HTTP response for `patch /v1/machines/{machine_id}`, but is otherwise the

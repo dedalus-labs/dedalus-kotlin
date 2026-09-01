@@ -64,11 +64,7 @@ import com.dedalus.api.models.machines.Machine
 // Or configures using the `DEDALUS_API_KEY`, `DEDALUS_X_API_KEY`, `DEDALUS_ORG_ID` and `DEDALUS_BASE_URL` environment variables
 val client: DedalusClient = DedalusOkHttpClient.fromEnv()
 
-val params: CreateParams = CreateParams.builder()
-    .memoryMiB(0L)
-    .storageGiB(0L)
-    .vcpu(0.0)
-    .build()
+val params: CreateParams = CreateParams.builder().build()
 val machine: Machine = client.machines().create(params)
 ```
 
@@ -168,11 +164,7 @@ import com.dedalus.api.models.machines.Machine
 // Or configures using the `DEDALUS_API_KEY`, `DEDALUS_X_API_KEY`, `DEDALUS_ORG_ID` and `DEDALUS_BASE_URL` environment variables
 val client: DedalusClient = DedalusOkHttpClient.fromEnv()
 
-val params: CreateParams = CreateParams.builder()
-    .memoryMiB(0L)
-    .storageGiB(0L)
-    .vcpu(0.0)
-    .build()
+val params: CreateParams = CreateParams.builder().build()
 val machine: Machine = client.async().machines().create(params)
 ```
 
@@ -188,30 +180,11 @@ import com.dedalus.api.models.machines.Machine
 // Or configures using the `DEDALUS_API_KEY`, `DEDALUS_X_API_KEY`, `DEDALUS_ORG_ID` and `DEDALUS_BASE_URL` environment variables
 val client: DedalusClientAsync = DedalusOkHttpClientAsync.fromEnv()
 
-val params: CreateParams = CreateParams.builder()
-    .memoryMiB(0L)
-    .storageGiB(0L)
-    .vcpu(0.0)
-    .build()
+val params: CreateParams = CreateParams.builder().build()
 val machine: Machine = client.machines().create(params)
 ```
 
 The asynchronous client supports the same options as the synchronous one, except most methods are [suspending](https://kotlinlang.org/docs/coroutines-guide.html).
-
-## Streaming
-
-The SDK defines methods that return response "chunk" streams, where each chunk can be individually processed as soon as it arrives instead of waiting on the full response. Streaming methods generally correspond to [SSE](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events) or [JSONL](https://jsonlines.org) responses.
-
-Some of these methods may have streaming and non-streaming variants, but a streaming method will always have a `Streaming` suffix in its name, even if it doesn't have a non-streaming variant.
-
-These streaming methods return [`StreamResponse`](dedalus-kotlin-core/src/main/kotlin/com/dedalus/api/core/http/StreamResponse.kt) for synchronous clients:
-
-```kotlin
-client.machines().watchStreaming(params).use { response ->
-    response.asSequence().forEach { println(it) }
-    println("No more chunks!")
-}
-```
 
 ## Raw responses
 
@@ -225,11 +198,7 @@ import com.dedalus.api.core.http.HttpResponseFor
 import com.dedalus.api.models.machines.CreateParams
 import com.dedalus.api.models.machines.Machine
 
-val params: CreateParams = CreateParams.builder()
-    .memoryMiB(0L)
-    .storageGiB(0L)
-    .vcpu(0.0)
-    .build()
+val params: CreateParams = CreateParams.builder().build()
 val machine: HttpResponseFor<Machine> = client.machines().withRawResponse().create(params)
 
 val statusCode: Int = machine.statusCode()
@@ -260,8 +229,6 @@ The SDK throws custom unchecked exception types:
   | 429    | [`RateLimitException`](dedalus-kotlin-core/src/main/kotlin/com/dedalus/api/errors/RateLimitException.kt)                       |
   | 5xx    | [`InternalServerException`](dedalus-kotlin-core/src/main/kotlin/com/dedalus/api/errors/InternalServerException.kt)             |
   | others | [`UnexpectedStatusCodeException`](dedalus-kotlin-core/src/main/kotlin/com/dedalus/api/errors/UnexpectedStatusCodeException.kt) |
-
-  [`SseException`](dedalus-kotlin-core/src/main/kotlin/com/dedalus/api/errors/SseException.kt) is thrown for errors encountered during [SSE streaming](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events) after a successful initial HTTP response.
 
 - [`DedalusIoException`](dedalus-kotlin-core/src/main/kotlin/com/dedalus/api/errors/DedalusIoException.kt): I/O networking errors.
 
@@ -564,11 +531,7 @@ import com.dedalus.api.models.machines.CreateParams
 import com.dedalus.api.models.machines.MachineCreateParams
 
 val params: MachineCreateParams = MachineCreateParams.builder()
-    .createParams(CreateParams.builder()
-        .memoryMiB(0L)
-        .storageGiB(0L)
-        .vcpu(0.0)
-        .build())
+    .createParams(CreateParams.builder().build())
     .build()
 ```
 
@@ -613,16 +576,11 @@ To forcibly omit a required parameter or property, pass [`JsonMissing`](dedalus-
 
 ```kotlin
 import com.dedalus.api.core.JsonMissing
-import com.dedalus.api.models.machines.CreateParams
 import com.dedalus.api.models.machines.MachineCreateParams
+import com.dedalus.api.models.machines.MachineRetrieveParams
 
-val params: MachineCreateParams = MachineCreateParams.builder()
-    .createParams(CreateParams.builder()
-        .memoryMiB(0L)
-        .storageGiB(0L)
-        .vcpu(0.0)
-        .build())
-    .memoryMiB(JsonMissing.of())
+val params: MachineCreateParams = MachineRetrieveParams.builder()
+    .machineId(JsonMissing.of())
     .build()
 ```
 

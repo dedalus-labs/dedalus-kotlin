@@ -22,19 +22,14 @@ import com.dedalus.api.models.machines.MachineList
 import com.dedalus.api.models.machines.MachineListPageAsync
 import com.dedalus.api.models.machines.MachineListParams
 import com.dedalus.api.models.machines.MachineRetrieveParams
+import com.dedalus.api.models.machines.MachineRetrieveResponse
 import com.dedalus.api.models.machines.MachineSleepParams
 import com.dedalus.api.models.machines.MachineUpdateParams
 import com.dedalus.api.models.machines.MachineWakeParams
-import com.dedalus.api.services.async.machines.ArtifactServiceAsync
-import com.dedalus.api.services.async.machines.ArtifactServiceAsyncImpl
 import com.dedalus.api.services.async.machines.ExecutionServiceAsync
 import com.dedalus.api.services.async.machines.ExecutionServiceAsyncImpl
-import com.dedalus.api.services.async.machines.PreviewServiceAsync
-import com.dedalus.api.services.async.machines.PreviewServiceAsyncImpl
 import com.dedalus.api.services.async.machines.SshServiceAsync
 import com.dedalus.api.services.async.machines.SshServiceAsyncImpl
-import com.dedalus.api.services.async.machines.TerminalServiceAsync
-import com.dedalus.api.services.async.machines.TerminalServiceAsyncImpl
 
 class MachineServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
     MachineServiceAsync {
@@ -43,32 +38,20 @@ class MachineServiceAsyncImpl internal constructor(private val clientOptions: Cl
         WithRawResponseImpl(clientOptions)
     }
 
-    private val artifacts: ArtifactServiceAsync by lazy { ArtifactServiceAsyncImpl(clientOptions) }
-
-    private val previews: PreviewServiceAsync by lazy { PreviewServiceAsyncImpl(clientOptions) }
-
     private val ssh: SshServiceAsync by lazy { SshServiceAsyncImpl(clientOptions) }
 
     private val executions: ExecutionServiceAsync by lazy {
         ExecutionServiceAsyncImpl(clientOptions)
     }
 
-    private val terminals: TerminalServiceAsync by lazy { TerminalServiceAsyncImpl(clientOptions) }
-
     override fun withRawResponse(): MachineServiceAsync.WithRawResponse = withRawResponse
 
     override fun withOptions(modifier: (ClientOptions.Builder) -> Unit): MachineServiceAsync =
         MachineServiceAsyncImpl(clientOptions.toBuilder().apply(modifier).build())
 
-    override fun artifacts(): ArtifactServiceAsync = artifacts
-
-    override fun previews(): PreviewServiceAsync = previews
-
     override fun ssh(): SshServiceAsync = ssh
 
     override fun executions(): ExecutionServiceAsync = executions
-
-    override fun terminals(): TerminalServiceAsync = terminals
 
     override suspend fun create(
         params: MachineCreateParams,
@@ -80,7 +63,7 @@ class MachineServiceAsyncImpl internal constructor(private val clientOptions: Cl
     override suspend fun retrieve(
         params: MachineRetrieveParams,
         requestOptions: RequestOptions,
-    ): Machine =
+    ): MachineRetrieveResponse =
         // get /v1/machines/{machine_id}
         withRawResponse().retrieve(params, requestOptions).parse()
 
@@ -122,24 +105,12 @@ class MachineServiceAsyncImpl internal constructor(private val clientOptions: Cl
         private val errorHandler: Handler<HttpResponse> =
             errorHandler(errorBodyHandler(clientOptions.jsonMapper))
 
-        private val artifacts: ArtifactServiceAsync.WithRawResponse by lazy {
-            ArtifactServiceAsyncImpl.WithRawResponseImpl(clientOptions)
-        }
-
-        private val previews: PreviewServiceAsync.WithRawResponse by lazy {
-            PreviewServiceAsyncImpl.WithRawResponseImpl(clientOptions)
-        }
-
         private val ssh: SshServiceAsync.WithRawResponse by lazy {
             SshServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
         private val executions: ExecutionServiceAsync.WithRawResponse by lazy {
             ExecutionServiceAsyncImpl.WithRawResponseImpl(clientOptions)
-        }
-
-        private val terminals: TerminalServiceAsync.WithRawResponse by lazy {
-            TerminalServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
         override fun withOptions(
@@ -149,15 +120,9 @@ class MachineServiceAsyncImpl internal constructor(private val clientOptions: Cl
                 clientOptions.toBuilder().apply(modifier).build()
             )
 
-        override fun artifacts(): ArtifactServiceAsync.WithRawResponse = artifacts
-
-        override fun previews(): PreviewServiceAsync.WithRawResponse = previews
-
         override fun ssh(): SshServiceAsync.WithRawResponse = ssh
 
         override fun executions(): ExecutionServiceAsync.WithRawResponse = executions
-
-        override fun terminals(): TerminalServiceAsync.WithRawResponse = terminals
 
         private val createHandler: Handler<Machine> = jsonHandler<Machine>(clientOptions.jsonMapper)
 
@@ -186,13 +151,13 @@ class MachineServiceAsyncImpl internal constructor(private val clientOptions: Cl
             }
         }
 
-        private val retrieveHandler: Handler<Machine> =
-            jsonHandler<Machine>(clientOptions.jsonMapper)
+        private val retrieveHandler: Handler<MachineRetrieveResponse> =
+            jsonHandler<MachineRetrieveResponse>(clientOptions.jsonMapper)
 
         override suspend fun retrieve(
             params: MachineRetrieveParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<Machine> {
+        ): HttpResponseFor<MachineRetrieveResponse> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
