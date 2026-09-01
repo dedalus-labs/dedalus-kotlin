@@ -4,7 +4,6 @@ package com.dedalus.api.client
 
 import com.dedalus.api.core.ClientOptions
 import com.dedalus.api.services.async.MachineServiceAsync
-import com.dedalus.api.services.async.UsageServiceAsync
 
 /**
  * A client for interacting with the Dedalus REST API asynchronously. You can also switch to
@@ -42,8 +41,6 @@ interface DedalusClientAsync {
      */
     fun withOptions(modifier: (ClientOptions.Builder) -> Unit): DedalusClientAsync
 
-    fun usage(): UsageServiceAsync
-
     fun machines(): MachineServiceAsync
 
     /**
@@ -72,8 +69,6 @@ interface DedalusClientAsync {
         fun withOptions(
             modifier: (ClientOptions.Builder) -> Unit
         ): DedalusClientAsync.WithRawResponse
-
-        fun usage(): UsageServiceAsync.WithRawResponse
 
         fun machines(): MachineServiceAsync.WithRawResponse
     }

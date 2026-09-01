@@ -29,10 +29,10 @@ internal class MachineServiceAsyncTest {
         val machine =
             machineServiceAsync.create(
                 CreateParams.builder()
-                    .memoryMiB(0L)
-                    .storageGiB(0L)
-                    .vcpu(0.0)
                     .autosleep("autosleep")
+                    .memoryMiB(1L)
+                    .storageGiB(1L)
+                    .vcpu(1.0)
                     .build()
             )
 
@@ -49,7 +49,11 @@ internal class MachineServiceAsyncTest {
         val machineServiceAsync = client.machines()
 
         val machine =
-            machineServiceAsync.retrieve(MachineRetrieveParams.builder().machineId("dm-3").build())
+            machineServiceAsync.retrieve(
+                MachineRetrieveParams.builder()
+                    .machineId("dm-ecc2efdd-ddfa-31a9-c6f1-b833d337aa7c")
+                    .build()
+            )
 
         machine.validate()
     }
@@ -66,7 +70,7 @@ internal class MachineServiceAsyncTest {
         val machine =
             machineServiceAsync.update(
                 MachineUpdateParams.builder()
-                    .machineId("dm-3")
+                    .machineId("dm-ecc2efdd-ddfa-31a9-c6f1-b833d337aa7c")
                     .updateParams(
                         UpdateParams.builder()
                             .autosleep("autosleep")
@@ -105,7 +109,11 @@ internal class MachineServiceAsyncTest {
         val machineServiceAsync = client.machines()
 
         val machine =
-            machineServiceAsync.delete(MachineDeleteParams.builder().machineId("dm-3").build())
+            machineServiceAsync.delete(
+                MachineDeleteParams.builder()
+                    .machineId("dm-ecc2efdd-ddfa-31a9-c6f1-b833d337aa7c")
+                    .build()
+            )
 
         machine.validate()
     }
@@ -120,7 +128,11 @@ internal class MachineServiceAsyncTest {
         val machineServiceAsync = client.machines()
 
         val machine =
-            machineServiceAsync.sleep(MachineSleepParams.builder().machineId("dm-3").build())
+            machineServiceAsync.sleep(
+                MachineSleepParams.builder()
+                    .machineId("dm-ecc2efdd-ddfa-31a9-c6f1-b833d337aa7c")
+                    .build()
+            )
 
         machine.validate()
     }
@@ -135,7 +147,11 @@ internal class MachineServiceAsyncTest {
         val machineServiceAsync = client.machines()
 
         val machine =
-            machineServiceAsync.wake(MachineWakeParams.builder().machineId("dm-3").build())
+            machineServiceAsync.wake(
+                MachineWakeParams.builder()
+                    .machineId("dm-ecc2efdd-ddfa-31a9-c6f1-b833d337aa7c")
+                    .build()
+            )
 
         machine.validate()
     }

@@ -4,7 +4,6 @@ package com.dedalus.api.client
 
 import com.dedalus.api.core.ClientOptions
 import com.dedalus.api.services.blocking.MachineService
-import com.dedalus.api.services.blocking.UsageService
 
 /**
  * A client for interacting with the Dedalus REST API synchronously. You can also switch to
@@ -42,8 +41,6 @@ interface DedalusClient {
      */
     fun withOptions(modifier: (ClientOptions.Builder) -> Unit): DedalusClient
 
-    fun usage(): UsageService
-
     fun machines(): MachineService
 
     /**
@@ -68,8 +65,6 @@ interface DedalusClient {
          * The original service is not modified.
          */
         fun withOptions(modifier: (ClientOptions.Builder) -> Unit): DedalusClient.WithRawResponse
-
-        fun usage(): UsageService.WithRawResponse
 
         fun machines(): MachineService.WithRawResponse
     }
